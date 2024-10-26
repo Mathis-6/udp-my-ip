@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 
 
@@ -27,7 +28,7 @@ union sockaddr_in_u{
 };
 union ip_addr_u{
 	int ipv4;
-	in6_addr ipv6;
+	struct in6_addr ipv6;
 };
 
 bool str_equal(const char*, const char*);
@@ -39,8 +40,8 @@ int main(int argc, char *argv[]){
 	unsigned short listen_ip_argv_pos = 0, listen_port_argv_pos = 0;
 	
 	unsigned short listen_port = 0;
-	sockaddr_in_u sock_server, sock_client;
-	ip_addr_u listen_addr = {0};
+	union sockaddr_in_u sock_server, sock_client;
+	union ip_addr_u listen_addr = {0};
 	int listen_ip_family = AF_INET;
 	
 	
@@ -131,7 +132,7 @@ int main(int argc, char *argv[]){
 	
 	
 	int server_socket;
-	unsigned int sizeof_sockaddr = sizeof(sockaddr);
+	unsigned int sizeof_sockaddr = sizeof(struct sockaddr);
 	
 	server_socket = socket(listen_ip_family, SOCK_DGRAM, 0);
 	if (server_socket == -1) {
